@@ -24,7 +24,7 @@ class UserModel{
 
 
 
-  UserModel.fromJson(Map<dynamic,dynamic> json){
+  UserModel.fromJson(Map<String,dynamic> json){
     print('INNNN');
     fullName = json['FullName'];
     print('AND $fullName');
@@ -40,8 +40,8 @@ class UserModel{
   }
 
 
-  Map<dynamic, dynamic> toJson() {
-    final Map<dynamic, dynamic> data = new Map<dynamic, dynamic>();
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['phoneNumber'] = this.phoneNumber;
     data['city'] = this.city;
     data['relativeOneName'] = this.firstRelativeName;

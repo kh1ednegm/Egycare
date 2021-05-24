@@ -57,13 +57,11 @@ class LocalHelper{
    pref.remove('user');
   }
 
-  static deleteTokenFromLocal() async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.remove('token');
-  }
 
-  static deleteIdFromLocal() async{
+  static logOut() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.remove('user');
+    pref.remove('token');
     pref.remove('id');
   }
 
