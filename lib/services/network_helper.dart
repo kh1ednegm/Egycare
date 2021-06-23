@@ -2,7 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
+import 'package:egycare/models/disease_model.dart';
 import 'package:egycare/models/hospital_model.dart';
+import 'package:egycare/models/medical_records_model.dart';
+import 'package:egycare/models/medical_test_model.dart';
+import 'package:egycare/models/medicine_model.dart';
+import 'package:egycare/models/surgery_model.dart';
 import 'package:egycare/models/user_model.dart';
 import 'package:egycare/services/local_helper.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +21,9 @@ const REGISTER_ENDPOINT = DOMAIN + 'ApplicationUser/postUser';
 const LOGIN_ENDPOINT = DOMAIN + 'ApplicationUser/Login';
 const GET_PERSONAL_INFO_ENDPOINT = DOMAIN + 'PatientProfile/getPatientById/';
 const EDIT_PERSONAL_INFO_ENDPOINT = DOMAIN + 'PatientProfile/UpdatePatient/';
+const ADD_NEW_MEDICINE = DOMAIN + 'Medicines/PostMedicine/';
+const GET_MEDICAL_RECORDS = DOMAIN + 'MedicalHistories/GetMedicalHistory/';
+
 const mapsKey = 'AIzaSyBxTpTVqAy_Aq_qhkv5wwjLz5g1WWZQxNg';
 
 class NetworkHelper {
@@ -35,10 +43,11 @@ class NetworkHelper {
   }
 
   static Future<dynamic> login(
-      {@required String userSnn, @required String password}) async {
+      {@required String userSnn, @required String password, @required String deviceToken}) async {
     Map<String, dynamic> input = {
       'patientSSN': userSnn,
       'password': password,
+      'deviceToken': deviceToken,
     };
     var response = await Helper.post(url: LOGIN_ENDPOINT, body: input);
     print(response.statusCode);
@@ -48,7 +57,6 @@ class NetworkHelper {
     else
       return 0;
   }
-
 
   static Future<UserModel> getPersonalInfoUsingId() async {
     var user = await LocalHelper.getUserFromLocal();
@@ -96,6 +104,49 @@ class NetworkHelper {
       return 0;
   }
 
+  static Future<dynamic> addNewMedicine({@required Map<String,dynamic> medicine}) async {
+    var id = await LocalHelper.getIdFromLocal();
+    var token = await LocalHelper.getTokenFromLocal();
+
+    var response = await Helper.post(url: ADD_NEW_MEDICINE + '${id.toString()}',
+        body: medicine, bearerToken: token.toString());
+    print(response.statusCode);
+    var result;
+    if(response.body.isNotEmpty)
+      result = jsonDecode(response.body);
+    if(response.statusCode == 200){
+      print(response.body);
+      return 200;
+    }
+    else if(response.statusCode == 400 && result == 'There is no medical history for this Patient'){
+      return 'الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك';
+    }
+    else
+      return 0;
+  }
+
+  static Future<dynamic> getMedicalHistory() async{
+    var id = await LocalHelper.getIdFromLocal();
+    var token = await LocalHelper.getTokenFromLocal();
+
+    var response = await Helper.get(url: GET_MEDICAL_RECORDS + '${id.toString()}', bearerToken: token.toString());
+    print(response.statusCode);
+    var result = jsonDecode(response.body);
+
+    if(response.statusCode == 200){
+      return MedicalRecords(
+        diseases: (result['diseases'] as List).map((disease) => Disease.fromJson(disease)).toList(),
+        medicines: (result['medicines'] as List).map((medicine) => MedicineModel.fromJson(medicine)).toList(),
+        surgeries: (result['operations'] as List).map((surgery) => SurgeryModel.fromJson(surgery)).toList(),
+        tests: (result['tests'] as List).map((test) => TestModel.fromJson(test)).toList(),
+      );
+    }
+    else if(response.statusCode == 404 && result == 'This user doesn\'t have any medical history yet.'){
+      return 404;
+    }
+    else
+      return 0;
+  }
 
   static Future<List<Place>> getNearestHospitals() async {
     Position position = await Geolocator.getCurrentPosition(

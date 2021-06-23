@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "540232180804",
+    "project_id": "egycare-e35b9",
+    "storage_bucket": "egycare-e35b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540232180804:android:6be4f9ab458e809d5bc811",
+        "android_client_info": {
+          "package_name": "com.khalednegm.egycare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "540232180804-vrvu5up4bvpooqotijeul198c21ka1pi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzC0Al7JxHhCONPxLwjHzTiDpRCClQuVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "540232180804-vrvu5up4bvpooqotijeul198c21ka1pi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

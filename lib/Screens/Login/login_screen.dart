@@ -10,6 +10,8 @@ import 'package:egycare/services/network_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 
 class LoginScreen extends StatefulWidget {
@@ -21,9 +23,23 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   String _userSnn='',_password='';
+  String _deviceToken;
   bool _showPassword = true;
   bool _showSnnError = false,
        _passwordError = false;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+
+     _firebaseMessaging.getToken().then((token) {
+      _deviceToken = token;
+      print('The Token ISSSSSSSSSSSSSSSSSS : $token');
+    });
+  }
 
   void showPassword() {
     if (_showPassword == true)
@@ -31,8 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
     else
       _showPassword = true;
   }
-
-
   bool _snnValidator(String snnNumber) {
     if (snnNumber.length == 14) {
       if (RegExp(r'([0-9]{14})').hasMatch(snnNumber))
@@ -147,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                         try{
-                          var result = await NetworkHelper.login(userSnn: _userSnn, password: _password);
+                          var result = await NetworkHelper.login(userSnn: _userSnn, password: _password,deviceToken: _deviceToken);
                           if(result != 0){
                              var token = result['token'];
                              var userId = result['userId'];

@@ -5,12 +5,14 @@ class MedicineModel{
   String instructions;
   String startDate;
   String endDate;
+  int medicalHistoryId;
 
   MedicineModel(
       {this.medicineName,
       this.instructions,
       this.startDate,
-      this.endDate});
+      this.endDate,
+      this.medicalHistoryId});
 
 
   MedicineModel.fromJson(Map<String,dynamic> json){
@@ -25,8 +27,9 @@ class MedicineModel{
 
     data['name'] = this.medicineName;
     data['instructions'] = this.instructions;
-    data['start'] = this.startDate;
-    data['end'] = this.endDate;
+    data['start'] = '${this.startDate}T23:26:33.667Z';
+    data['end'] = '${this.endDate}T23:26:33.667Z';
+    data['medicalHistoryId'] = this.medicalHistoryId;
 
     return data;
 

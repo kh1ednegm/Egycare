@@ -22,13 +22,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _confirmedPassword;
   String dateTime;
 
+
+
+  List<DropdownMenuItem> _dropdownMenuItems;
+  List<String> _cities = [
+    'القاهرة',
+    'الجيزة',
+    'الشرقية',
+    'الدقهلية',
+    'البحيرة',
+    'المنيا',
+    'القليوبية',
+    'الإسكندرية',
+    'الغربية',
+    'سوهاج',
+    'أسيوط',
+    'المنوفية',
+    'كفر الشيخ',
+    'الفيوم',
+    'قنا',
+    'بني سويف',
+    'أسوان',
+    'دمياط',
+    'الإسماعيلية',
+    'الأقصر',
+    'بور سعيد',
+    'السويس',
+    'مطروح',
+    'شمال سيناء',
+    'البحر الاحمر',
+    'الوادي الجديد',
+    'جنوب سيناء',
+  ];
+
+
+
   String _fullName = '';
   String _userSnn = '';
   String _dateOfBirth = DateFormat('dd-MM-yyyy').format(DateTime.now());
   String _phoneNumber = '';
   String _password = '';
   String _gender = 'ذكر';
-  String _city = '';
+  String _city = 'القاهرة';
   String _firstRelativeName = '';
   String _firstRelativePhoneNumber = '';
   String _secondRelativeName = '';
@@ -48,6 +83,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _showR2PhoneError = false;
 
 
+  @override
+  void initState() {
+    super.initState();
+    _dropdownMenuItems = createDropdownMenu();
+  }
 
   void showPassword() {
     if (_showPassword == true)
@@ -81,6 +121,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _firstRelativePhoneNumber.length == 0 ||
         _secondRelativeName.length == 0 ||
         _secondRelativePhoneNumber.length == 0;
+  }
+
+  List<DropdownMenuItem> createDropdownMenu(){
+    List<DropdownMenuItem> _dropdownMenuItems = List<DropdownMenuItem>();
+    for(int i = 0; i< _cities.length; i++){
+      var _item = DropdownMenuItem(
+        value: _cities[i],
+        child: Text(
+          _cities[i],
+          textAlign: TextAlign.left,
+        ),
+      );
+      _dropdownMenuItems.add(_item);
+    }
+    return _dropdownMenuItems;
   }
 
   void _onPress() async {
@@ -128,7 +183,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         print('PUSH NOWWWW');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      } else if (result == 0) {
+      }
+      else if (result == 0) {
         print("BAAAD Request++++++");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -150,7 +206,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         );
-      } else if (result == 400) {
+      }
+      else if (result == 400) {
         print('::::::::: Reapeted SNN');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -358,22 +415,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                     ),
-                    CustomTextFiled(
-                      inputDecoration: InputDecoration(
-                        errorText: _showCityError ? 'غير صحيح' : null,
-                        border: InputBorder.none,
-                        hintText: "المحافظة",
-                        suffixIcon: Icon(
-                          Icons.location_on,
-                          color: kPrimaryColor,
-                        ),
+                    // CustomTextFiled(
+                    //   inputDecoration: InputDecoration(
+                    //     errorText: _showCityError ? 'غير صحيح' : null,
+                    //     border: InputBorder.none,
+                    //     hintText: "المحافظة",
+                    //     suffixIcon: Icon(
+                    //       Icons.location_on,
+                    //       color: kPrimaryColor,
+                    //     ),
+                    //   ),
+                    //   onChanged: (value) {
+                    //     setState(() {
+                    //       _city = value;
+                    //       _showCityError = Validator.fullName(value);
+                    //     });
+                    //   },
+                    // ),
+                    Container(
+                      width: size.width * 0.8,
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.only(right: size.width * 0.07),
+                      decoration: BoxDecoration(
+                          color: Color(0xFFF1E6FF),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: Colors.grey[50],
+                          )),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              value:_city,
+                              items: _dropdownMenuItems,
+                              onChanged: (value){
+                                setState(() {
+                                  _city = value;
+                                  print(_city);
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal:size.width * 0.03,vertical: size.height * 0.02),
+                            child: Text(
+                              'المحافظة',
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.black54),
+                            ),
+                          ),
+                          Icon(
+                            Icons.location_on,
+                            color: kPrimaryColor,
+                          ),
+                        ],
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          _city = value;
-                          _showCityError = Validator.fullName(value);
-                        });
-                      },
                     ),
                     Container(
                       width: size.width * 0.8,
@@ -436,7 +534,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               },
                             ),
                             Container(
-                              margin: EdgeInsets.only(right: 20),
+                              margin: EdgeInsets.only(right: size.width * 0.04),
                               child: Text(
                                 'الجنس',
                                 style: TextStyle(

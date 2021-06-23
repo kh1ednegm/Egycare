@@ -12,6 +12,17 @@ class UserMedicalRecordsScreen extends StatefulWidget {
 }
 
 class _UserMedicalRecordsScreenState extends State<UserMedicalRecordsScreen> {
+
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -101,6 +112,7 @@ class _UserMedicalRecordsScreenState extends State<UserMedicalRecordsScreen> {
 class CustomCard extends StatelessWidget {
   final String title, imagePath;
   final Function onTap;
+
 
   CustomCard({
     Key key,

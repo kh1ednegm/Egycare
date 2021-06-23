@@ -26,16 +26,16 @@ class UserModel{
 
   UserModel.fromJson(Map<String,dynamic> json){
     print('INNNN');
-    fullName = json['FullName'];
+    fullName = json['fullName'];
     print('AND $fullName');
     dateOfBirth = json['dateOfBirth'];
     phoneNumber = json['phoneNumber'];
     gender = json['gender'];
     city = json['city'];
-    firstRelativeName = json['relativeOneName'];
-    firstRelativePhoneNumber = json['relativeOnePhoneNumber'];
-    secondRelativeName = json['relativeTwoName'];
-    secondRelativePhoneNumber = json['relativeTwoPhoneNumber'];
+    firstRelativeName = json['realtiveOneName'];
+    firstRelativePhoneNumber = json['realtiveOnePhoneNumber'];
+    secondRelativeName = json['realtiveTwoName'];
+    secondRelativePhoneNumber = json['realtiveTwoPhoneNumber'];
 
   }
 
@@ -44,10 +44,10 @@ class UserModel{
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['phoneNumber'] = this.phoneNumber;
     data['city'] = this.city;
-    data['relativeOneName'] = this.firstRelativeName;
-    data['relativeOnePhoneNumber'] = this.firstRelativePhoneNumber;
-    data['relativeTwoName'] = this.secondRelativeName;
-    data['relativeTwoPhoneNumber'] = this.secondRelativePhoneNumber;
+    data['realtiveOneName'] = this.firstRelativeName;
+    data['realtiveOnePhoneNumber'] = this.firstRelativePhoneNumber;
+    data['realtiveTwoName'] = this.secondRelativeName;
+    data['realtiveTwoPhoneNumber'] = this.secondRelativePhoneNumber;
 
     return data;
   }
