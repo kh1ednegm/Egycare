@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
+import 'package:egycare/models/blood_donation_model.dart';
 import 'package:egycare/models/disease_model.dart';
 import 'package:egycare/models/hospital_model.dart';
 import 'package:egycare/models/medical_records_model.dart';
@@ -11,6 +12,7 @@ import 'package:egycare/models/surgery_model.dart';
 import 'package:egycare/models/user_model.dart';
 import 'package:egycare/services/local_helper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,6 +25,7 @@ const GET_PERSONAL_INFO_ENDPOINT = DOMAIN + 'PatientProfile/getPatientById/';
 const EDIT_PERSONAL_INFO_ENDPOINT = DOMAIN + 'PatientProfile/UpdatePatient/';
 const ADD_NEW_MEDICINE = DOMAIN + 'Medicines/PostMedicine/';
 const GET_MEDICAL_RECORDS = DOMAIN + 'MedicalHistories/GetMedicalHistory/';
+const GET_BLOOD_DONATION_REQUESTS = DOMAIN + 'Notifications/Get/';
 
 const mapsKey = 'AIzaSyBxTpTVqAy_Aq_qhkv5wwjLz5g1WWZQxNg';
 
@@ -58,28 +61,27 @@ class NetworkHelper {
       return 0;
   }
 
-  static Future<UserModel> getPersonalInfoUsingId() async {
+  static Future<UserModel> getPersonalInfoUsingId([String idPat]) async {
     var user = await LocalHelper.getUserFromLocal();
-    var token = await LocalHelper.getTokenFromLocal();
+    var token = await  LocalHelper.getTokenFromLocal();
     var id = await LocalHelper.getIdFromLocal();
 
-    if (user == null) {
-      var response = await Helper.get(
-          url: GET_PERSONAL_INFO_ENDPOINT + '${id.toString()}',
-          bearerToken: token.toString());
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        user = UserModel.fromJson(jsonDecode(response.body));
-        LocalHelper.saveUserToLocal(user);
-        print('OUTTER USER : $user');
-        return user;
-      }
-      else
-        return null;
+
+
+    var response = await Helper.get(url: GET_PERSONAL_INFO_ENDPOINT + '${idPat==null?id.toString():idPat}', bearerToken: token.toString());
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      user = UserModel.fromJson(jsonDecode(response.body));
+      LocalHelper.saveUserToLocal(user);
+      print('OUTTER USER : $user');
+      return UserModel.fromJson(jsonDecode(response.body));
+
     }
-    else {
+    else
+    {
       print(user);
-      return user;
+      return UserModel.fromJson(jsonDecode(response.body));
     }
   }
 
@@ -89,7 +91,16 @@ class NetworkHelper {
 
     var response = await Helper.put(
         url: EDIT_PERSONAL_INFO_ENDPOINT + '${id.toString()}',
-        body: user.toJson(),
+        body: {
+          "phoneNumber": user.phoneNumber,
+          "city": user.city,
+          "relativeOneName": user.firstRelativeName,
+          "relativeOnePhoneNumber": user.firstRelativePhoneNumber,
+          "relativeTwoName": user.secondRelativeName,
+          "relativeTwoPhoneNumber": user.secondRelativePhoneNumber,
+
+
+        },
         bearerToken: token.toString());
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -104,21 +115,68 @@ class NetworkHelper {
       return 0;
   }
 
-  static Future<dynamic> addNewMedicine({@required Map<String,dynamic> medicine}) async {
+  // static Future<dynamic> addNewMedicine({@required Map<String,dynamic> medicine}) async {
+  //   var id = await LocalHelper.getIdFromLocal();
+  //   var token = await LocalHelper.getTokenFromLocal();
+  //
+  //   var response = await Helper.post(url: ADD_NEW_MEDICINE + '${id.toString()}',
+  //       body: medicine, bearerToken: token.toString());
+  //   print(response.statusCode);
+  //   var result;
+  //   if(response.body.isNotEmpty)
+  //     result = jsonDecode(response.body);
+  //   if(response.statusCode == 200){
+  //     print(response.body);
+  //     return 200;
+  //   }
+  //   else if(response.statusCode == 400 && result == 'There is no medical history for this Patient'){
+  //     return 'الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك';
+  //   }
+  //   else
+  //     return 0;
+  // }
+
+  static Future<dynamic> addNewMedicine(context,
+      {@required Map<String, dynamic> medicine}) async {
     var id = await LocalHelper.getIdFromLocal();
     var token = await LocalHelper.getTokenFromLocal();
+    print("print in data");
+// var x={
+//   "id": id,
+//   "name": "string",
+//   "instructions": "string",
+//   "startDate": "2021-06-25T11:32:31.994Z",
+//   "endDate": "2021-06-25T11:32:31.994Z",
+//   "medicalHistoryId": 0
+// };
 
     var response = await Helper.post(url: ADD_NEW_MEDICINE + '${id.toString()}',
         body: medicine, bearerToken: token.toString());
-    print(response.statusCode);
+    print("it done" + response.statusCode.toString());
     var result;
-    if(response.body.isNotEmpty)
+    if (response.body.isNotEmpty)
       result = jsonDecode(response.body);
-    if(response.statusCode == 200){
+
+
+    print(result.toString());
+    if (response.statusCode == 200) {
       print(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("تم اضافة الدواء بنجاح")));
+
       return 200;
     }
-    else if(response.statusCode == 400 && result == 'There is no medical history for this Patient'){
+    else if (response.statusCode == 400 &&
+        result == 'There is no medical history for this Patient') {
+      ScaffoldMessenger
+          .of(context)
+          .showSnackBar(SnackBar(content: Text(
+
+
+          " الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك"
+
+      )));
+
       return 'الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك';
     }
     else
@@ -132,7 +190,7 @@ class NetworkHelper {
     var response = await Helper.get(url: GET_MEDICAL_RECORDS + '${id.toString()}', bearerToken: token.toString());
     print(response.statusCode);
     var result = jsonDecode(response.body);
-
+    print(result);
     if(response.statusCode == 200){
       return MedicalRecords(
         diseases: (result['diseases'] as List).map((disease) => Disease.fromJson(disease)).toList(),
@@ -146,6 +204,25 @@ class NetworkHelper {
     }
     else
       return 0;
+  }
+
+  static Future<List<BloodDonation>> getBloodDonationRequests() async{
+
+    var id = await LocalHelper.getIdFromLocal();
+    var token = await LocalHelper.getTokenFromLocal();
+
+    var response = await Helper.get(url: GET_BLOOD_DONATION_REQUESTS + '${id.toString()}', bearerToken: token.toString());
+    print(id.toString());
+    print(response.statusCode);
+    var result;
+
+    if(response.statusCode == 200 && response.body.isNotEmpty){
+      result = jsonDecode(response.body);
+      print(response.body);
+      return (result as List).map((bloodDonation) => BloodDonation.fromJson(bloodDonation)).toList();
+    }
+    else
+      return null;
   }
 
   static Future<List<Place>> getNearestHospitals() async {
@@ -179,6 +256,8 @@ class NetworkHelper {
     else return 0;
 
   }
+
+
 
 }
 

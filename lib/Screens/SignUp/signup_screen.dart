@@ -189,7 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            backgroundColor: kPrimaryColor,
+            backgroundColor: Colors.white,
             elevation: 10,
             content: Text(
               'حاول مرة اخري',
@@ -415,23 +415,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                     ),
-                    // CustomTextFiled(
-                    //   inputDecoration: InputDecoration(
-                    //     errorText: _showCityError ? 'غير صحيح' : null,
-                    //     border: InputBorder.none,
-                    //     hintText: "المحافظة",
-                    //     suffixIcon: Icon(
-                    //       Icons.location_on,
-                    //       color: kPrimaryColor,
-                    //     ),
-                    //   ),
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       _city = value;
-                    //       _showCityError = Validator.fullName(value);
-                    //     });
-                    //   },
-                    // ),
                     Container(
                       width: size.width * 0.8,
                       margin: EdgeInsets.symmetric(vertical: 10),

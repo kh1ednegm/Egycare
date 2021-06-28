@@ -33,9 +33,9 @@ class UserModel{
     gender = json['gender'];
     city = json['city'];
     firstRelativeName = json['realtiveOneName'];
-    firstRelativePhoneNumber = json['realtiveOnePhoneNumber'];
+    firstRelativePhoneNumber = json['realtiveOnePhone'];
     secondRelativeName = json['realtiveTwoName'];
-    secondRelativePhoneNumber = json['realtiveTwoPhoneNumber'];
+    secondRelativePhoneNumber = json['realtiveTwoPhone'];
 
   }
 

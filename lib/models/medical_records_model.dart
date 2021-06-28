@@ -14,4 +14,6 @@ class MedicalRecords{
   List<TestModel> tests;
 
   MedicalRecords({@required this.diseases,@required this.medicines,@required this.surgeries,@required this.tests,});
+
+
 }

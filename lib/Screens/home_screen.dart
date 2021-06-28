@@ -2,7 +2,7 @@ import 'package:egycare/Screens/ScanCode/scan_code_screen.dart';
 import 'package:egycare/Screens/nearest_hospital_screen.dart';
 import 'package:egycare/Screens/user_blood_donation_screen.dart';
 import 'package:egycare/Screens/MedicalRecords/user_medical_records_screen.dart';
-import 'package:egycare/Screens/user_profile_screen.dart';
+import 'package:egycare/Screens/profileScreens/user_profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

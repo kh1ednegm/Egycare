@@ -18,8 +18,8 @@ class MedicineModel{
   MedicineModel.fromJson(Map<String,dynamic> json){
     medicineName = json['name'];
     instructions = json['instructions'];
-    startDate = json['start'];
-    endDate = json['end'];
+    startDate = json['startDate'];
+    endDate = json['endDate'];
   }
 
   Map<String,dynamic> toJson(){
@@ -27,8 +27,8 @@ class MedicineModel{
 
     data['name'] = this.medicineName;
     data['instructions'] = this.instructions;
-    data['start'] = '${this.startDate}T23:26:33.667Z';
-    data['end'] = '${this.endDate}T23:26:33.667Z';
+    data['startDate'] = '${this.startDate}T23:26:33.667Z';
+    data['endDate'] = '${this.endDate}T23:26:33.667Z';
     data['medicalHistoryId'] = this.medicalHistoryId;
 
     return data;
