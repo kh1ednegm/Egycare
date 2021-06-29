@@ -20,8 +20,7 @@ class MedicineScreen extends StatefulWidget {
       _MedicineScreenState();
 }
 
-class _MedicineScreenState
-    extends State<MedicineScreen> {
+class _MedicineScreenState extends State<MedicineScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

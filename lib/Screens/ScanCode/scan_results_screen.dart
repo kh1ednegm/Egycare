@@ -103,7 +103,6 @@ class PatData extends StatelessWidget {
               }
               else if(snapshot.hasData){
                 UserModel userModel= snapshot.data;
-                print(snapshot.data);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

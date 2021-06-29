@@ -80,8 +80,6 @@ class _TestsScreenState extends State<TestsScreen> {
                           indent: 24,
                           endIndent: 24,
                         ),
-
-
                         Container(
                           height: size.height * .4,
                           width: size.width,

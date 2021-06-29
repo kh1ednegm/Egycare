@@ -92,6 +92,14 @@ class _UserBloodDonationScreenState extends State<UserBloodDonationScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(
+                            'قطرة واحدة منك .. حياة بالنسبة لغيرك',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600
+                            ),
+                          ),
                           Padding(
                             padding: EdgeInsets.only(top: size.height * 0.06),
                             child: CircularProgressIndicator(),
@@ -137,13 +145,13 @@ class _UserBloodDonationScreenState extends State<UserBloodDonationScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
-                            'assets/images/gotohospital.svg',
+                            'assets/images/no_notifications.svg',
                             height: size.height * 0.25,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                                'الرجاء التوجة لاقرب مستشفي لتفعيل الحساب'),
+                                'لا توجد اي اشعارات في الوقت الحالي'),
                           ),
                           TextButton(
                             child: Text('حاول مرة اخري'),

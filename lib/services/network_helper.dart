@@ -115,73 +115,27 @@ class NetworkHelper {
       return 0;
   }
 
-  // static Future<dynamic> addNewMedicine({@required Map<String,dynamic> medicine}) async {
-  //   var id = await LocalHelper.getIdFromLocal();
-  //   var token = await LocalHelper.getTokenFromLocal();
-  //
-  //   var response = await Helper.post(url: ADD_NEW_MEDICINE + '${id.toString()}',
-  //       body: medicine, bearerToken: token.toString());
-  //   print(response.statusCode);
-  //   var result;
-  //   if(response.body.isNotEmpty)
-  //     result = jsonDecode(response.body);
-  //   if(response.statusCode == 200){
-  //     print(response.body);
-  //     return 200;
-  //   }
-  //   else if(response.statusCode == 400 && result == 'There is no medical history for this Patient'){
-  //     return 'الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك';
-  //   }
-  //   else
-  //     return 0;
-  // }
-
-  static Future<dynamic> addNewMedicine(context,
-      {@required Map<String, dynamic> medicine}) async {
+  static Future<int> addNewMedicine({@required Map<String,dynamic> medicine}) async {
     var id = await LocalHelper.getIdFromLocal();
     var token = await LocalHelper.getTokenFromLocal();
-    print("print in data");
-// var x={
-//   "id": id,
-//   "name": "string",
-//   "instructions": "string",
-//   "startDate": "2021-06-25T11:32:31.994Z",
-//   "endDate": "2021-06-25T11:32:31.994Z",
-//   "medicalHistoryId": 0
-// };
 
     var response = await Helper.post(url: ADD_NEW_MEDICINE + '${id.toString()}',
         body: medicine, bearerToken: token.toString());
-    print("it done" + response.statusCode.toString());
+    print(response.statusCode);
     var result;
-    if (response.body.isNotEmpty)
+    if(response.body.isNotEmpty)
       result = jsonDecode(response.body);
-
-
-    print(result.toString());
-    if (response.statusCode == 200) {
+    if(response.statusCode == 200){
       print(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("تم اضافة الدواء بنجاح")));
-
       return 200;
     }
-    else if (response.statusCode == 400 &&
-        result == 'There is no medical history for this Patient') {
-      ScaffoldMessenger
-          .of(context)
-          .showSnackBar(SnackBar(content: Text(
-
-
-          " الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك"
-
-      )));
-
-      return 'الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك';
+    else if(response.statusCode == 400 && result == 'There is no medical history for this Patient'){
+      return 400;
     }
     else
       return 0;
   }
+
 
   static Future<dynamic> getMedicalHistory() async{
     var id = await LocalHelper.getIdFromLocal();

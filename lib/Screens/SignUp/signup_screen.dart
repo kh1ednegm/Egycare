@@ -19,6 +19,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
   String _confirmedPassword;
   String dateTime;
 
@@ -138,122 +139,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return _dropdownMenuItems;
   }
 
-  void _onPress() async {
-    setState(() {
-      _showSnnError = Validator.snn(_userSnn, dateTime);
-    });
-    FocusScope.of(context).unfocus();
-
-
-    Map<String, dynamic> input = {
-      "fullName": _fullName,
-      "dateOfBirth": "${_dateOfBirth}T14:29:05.761Z",
-      "patientSSN": _userSnn,
-      "phoneNumber": _phoneNumber,
-      "password": _password,
-      "gender": _gender,
-      "city": _city,
-      "relativeOneName": _firstRelativeName,
-      "relativeOnePhoneNumber": _firstRelativePhoneNumber,
-      "relativeTwoName": _secondRelativeName,
-      "relativeTwoPhoneNumber": _secondRelativePhoneNumber,
-    };
-    if (_accountValidator() == true && _isEmpty() == false) {
-      print("DATA is Valid----");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.white,
-          elevation: 10,
-          content: Text(
-            '...جاري التحميل',
-            textAlign: TextAlign.right,
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1
-                .copyWith(color: Colors.black),
-          ),
-        ),
-      );
-      var result = await NetworkHelper.register(input: input);
-      setState(() {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      });
-      if (result == 200) {
-        print('PUSH NOWWWW');
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      }
-      else if (result == 0) {
-        print("BAAAD Request++++++");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.white,
-            elevation: 10,
-            content: Text(
-              'حاول مرة اخري',
-              textAlign: TextAlign.right,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  .copyWith(color: Colors.black),
-            ),
-            action: SnackBarAction(
-              label: 'الغاء',
-              textColor: kPrimaryColor,
-              onPressed: () {},
-            ),
-          ),
-        );
-      }
-      else if (result == 400) {
-        print('::::::::: Reapeted SNN');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.white,
-            elevation: 10,
-            content: Text(
-              'الرقم القومي موجود بالفعل',
-              textAlign: TextAlign.right,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  .copyWith(color: Colors.black),
-            ),
-            action: SnackBarAction(
-              textColor: kPrimaryColor,
-              onPressed: () {},
-              label: 'الغاء',
-            ),
-          ),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.white,
-          elevation: 10,
-          content: Text(
-            'حاول مرة اخري.. لقد قمت بادخال بيانات خاطئة',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1
-                .copyWith(color: Colors.black),
-          ),
-          action: SnackBarAction(
-            textColor: kPrimaryColor,
-            onPressed: () {},
-            label: 'الغاء',
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -297,6 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
                     ),
                     SizedBox(height: size.height * 0.001),
+                    // TexFiled for the user's name
                     CustomTextFiled(
                       inputType: TextInputType.name,
                       inputDecoration: InputDecoration(
@@ -315,6 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                     ),
+                    // TexFiled for the user's SNN
                     CustomTextFiled(
                       inputType: TextInputType.number,
                       inputDecoration: InputDecoration(
@@ -332,6 +219,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                     ),
+                    // Date Picker for the user's birthday
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
                       padding: EdgeInsets.only(
@@ -360,6 +248,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 .format(date);
                                           });
                                         },
+                                        maxDate: Duration(days: 0),
                                       ),
                                     ),
                                   ));
@@ -397,6 +286,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }),
                       ),
                     ),
+                    // TexFiled for the user's phone number
                     CustomTextFiled(
                       inputType: TextInputType.phone,
                       inputDecoration: InputDecoration(
@@ -415,6 +305,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                     ),
+                    // DropDown Menu for all Egypt cities
                     Container(
                       width: size.width * 0.8,
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -456,6 +347,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                     ),
+                    // Switch Button for gender
                     Container(
                       width: size.width * 0.8,
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -701,4 +593,122 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+
+  void _onPress() async {
+    setState(() {
+      _showSnnError = Validator.snn(_userSnn, dateTime);
+    });
+    FocusScope.of(context).unfocus();
+
+
+    Map<String, dynamic> input = {
+      "fullName": _fullName,
+      "dateOfBirth": "${_dateOfBirth}T14:29:05.761Z",
+      "patientSSN": _userSnn,
+      "phoneNumber": _phoneNumber,
+      "password": _password,
+      "gender": _gender,
+      "city": _city,
+      "relativeOneName": _firstRelativeName,
+      "relativeOnePhoneNumber": _firstRelativePhoneNumber,
+      "relativeTwoName": _secondRelativeName,
+      "relativeTwoPhoneNumber": _secondRelativePhoneNumber,
+    };
+    if (_accountValidator() == true && _isEmpty() == false) {
+      print("DATA is Valid----");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.white,
+          elevation: 10,
+          content: Text(
+            '...جاري التحميل',
+            textAlign: TextAlign.right,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Colors.black),
+          ),
+        ),
+      );
+      var result = await NetworkHelper.register(input: input);
+      setState(() {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      });
+      if (result == 200) {
+        print('PUSH NOWWWW');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      }
+      else if (result == 0) {
+        print("BAAAD Request++++++");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.white,
+            elevation: 10,
+            content: Text(
+              'حاول مرة اخري',
+              textAlign: TextAlign.right,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  .copyWith(color: Colors.black),
+            ),
+            action: SnackBarAction(
+              label: 'الغاء',
+              textColor: kPrimaryColor,
+              onPressed: () {},
+            ),
+          ),
+        );
+      }
+      else if (result == 400) {
+        print('::::::::: Reapeted SNN');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.white,
+            elevation: 10,
+            content: Text(
+              'الرقم القومي موجود بالفعل',
+              textAlign: TextAlign.right,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  .copyWith(color: Colors.black),
+            ),
+            action: SnackBarAction(
+              textColor: kPrimaryColor,
+              onPressed: () {},
+              label: 'الغاء',
+            ),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.white,
+          elevation: 10,
+          content: Text(
+            'حاول مرة اخري.. لقد قمت بادخال بيانات خاطئة',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Colors.black),
+          ),
+          action: SnackBarAction(
+            textColor: kPrimaryColor,
+            onPressed: () {},
+            label: 'الغاء',
+          ),
+        ),
+      );
+    }
+  }
+
 }

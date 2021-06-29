@@ -52,11 +52,6 @@ class _UserScanScreenState extends State<UserScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String myId="";
-    getmyId()async {
-      myId= await LocalHelper.getIdFromLocal();
-    }
-    getmyId();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.grey[200],

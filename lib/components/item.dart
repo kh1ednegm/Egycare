@@ -24,7 +24,7 @@ class CustomRow extends StatelessWidget {
         children: [
           Flexible(
             child: Container(
-              margin: EdgeInsets.only(right:size.width * 0.03),
+              margin: EdgeInsets.only(right:size.width * 0.03,left: size.width * 0.03),
               child: Text(
                 content,
                 style: TextStyle(

@@ -33,12 +33,7 @@ class SurgeriesScreen extends StatelessWidget {
                 itemCount: surgeries.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    //elevation: 16,
-                    //shadowColor: Colors.white70,
                     margin: EdgeInsets.symmetric(vertical: 8,horizontal: 4),
-                    // shape: RoundedRectangleBorder(
-                    //   borderRadius: BorderRadius.circular(23),
-                    // ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16)

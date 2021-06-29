@@ -32,6 +32,32 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: Container(
+        height: size.height,
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Egycare',
+              style: TextStyle(fontFamily: 'Diavlo',fontSize: 40),
+            ),
+            SizedBox(height: 20,),
+            SvgPicture.asset(
+              "assets/icons/intro.svg",
+              height: size.height * 0.25,
+              width: size.width * 0.25,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -44,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('WWWWWWWWWWWWWWWWWWWWW');
       pushNewScreen(
-          GlobalVariable.navigatorKey.currentState.context,
+        GlobalVariable.navigatorKey.currentState.context,
         screen: UserBloodDonationScreen(),
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
@@ -93,12 +119,12 @@ class _SplashScreenState extends State<SplashScreen> {
         if (notification != null && android != null) {
           // For displaying the notification as an overlay
           AwesomeNotifications().createNotification(
-              content: NotificationContent(
-                  id: 10,
-                  channelKey: 'basic_channel',
-                  title: message.notification?.title,
-                  body: message.notification?.body,
-              ),
+            content: NotificationContent(
+              id: 10,
+              channelKey: 'basic_channel',
+              title: message.notification?.title,
+              body: message.notification?.body,
+            ),
           );
 
         }
@@ -121,33 +147,5 @@ class _SplashScreenState extends State<SplashScreen> {
       );
 
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Container(
-        height: size.height,
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Egycare',
-              style: TextStyle(fontFamily: 'Diavlo',fontSize: 40),
-            ),
-            SizedBox(height: 20,),
-            SvgPicture.asset(
-              "assets/icons/intro.svg",
-              height: size.height * 0.25,
-              width: size.width * 0.25,
-            ),
-
-          ],
-        ),
-      ),
-    );
   }
 }

@@ -6,8 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyDatePicker extends StatelessWidget {
   final Function onDateTimeChanged;
-  DateTime initialDate;
-  MyDatePicker({@required this.onDateTimeChanged,this.initialDate});
+  final DateTime initialDate;
+  final Duration maxDate;
+  MyDatePicker({@required this.onDateTimeChanged,this.initialDate, this.maxDate});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class MyDatePicker extends StatelessWidget {
                     onDateTimeChanged: onDateTimeChanged,
                     initialDateTime: initialDate,
                     minimumDate: DateTime(1940, 01, 01),
-                    maximumDate: DateTime.now(),
+                    maximumDate: DateTime.now().add(maxDate),
                     mode: CupertinoDatePickerMode.date,
 
                   ),

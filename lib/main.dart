@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:egycare/Screens/Welcome/welcome_screen.dart';
 import 'package:egycare/constants.dart';
@@ -49,7 +48,8 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-        navigatorKey: GlobalVariable.navigatorKey,        theme: ThemeData(fontFamily: 'Cairo'),
+        navigatorKey: GlobalVariable.navigatorKey,
+        theme: ThemeData(fontFamily: 'Cairo'),
         home: SplashScreen(),
         debugShowCheckedModeBanner: false,
     );

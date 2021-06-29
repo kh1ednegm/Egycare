@@ -2,6 +2,7 @@ import 'package:egycare/components/custom_textField.dart';
 import 'package:egycare/components/date_picker.dart';
 import 'package:egycare/components/rounded_button.dart';
 import 'package:egycare/constants.dart';
+import 'package:egycare/models/medicine_model.dart';
 import 'package:egycare/services/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,8 +19,21 @@ class _AddDrugsState extends State<AddDrugs> {
 
   String nameDrug = '';
   String inst = '';
-  String firstDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  String lastDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String firstDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  String lastDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+  bool _showDrugNameError = false,
+       _showInstructionError = false;
+
+
+  bool _valid(){
+    return (_showDrugNameError || _showInstructionError);
+  }
+
+  bool _isNotEmpty(){
+    return nameDrug.isNotEmpty && inst.isNotEmpty;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +62,7 @@ class _AddDrugsState extends State<AddDrugs> {
                       inputDecoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "أسم الدواء",
+                        errorText: _showDrugNameError ? 'مطلوب' : null,
                         suffixIcon: Icon(
                           FontAwesomeIcons.capsules,
                           color: kPrimaryColor,
@@ -56,6 +71,7 @@ class _AddDrugsState extends State<AddDrugs> {
                       onChanged: (value) {
                         setState(() {
                           nameDrug=value;
+                          value.isEmpty ? _showDrugNameError = true : _showDrugNameError = false;
                         });
                       },
                     ),
@@ -65,6 +81,7 @@ class _AddDrugsState extends State<AddDrugs> {
                       inputDecoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "تعليمات أخد الدواء",
+                        errorText: _showInstructionError ? 'مطلوب' : null,
                         suffixIcon: Icon(
                           Icons.article_rounded,
                           color: kPrimaryColor,
@@ -73,10 +90,10 @@ class _AddDrugsState extends State<AddDrugs> {
                       onChanged: (value) {
                         setState(() {
                           inst=value;
+                          value.isEmpty ? _showInstructionError = true : _showInstructionError = false;
                         });
                       },
                     ),
-
 
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -102,10 +119,9 @@ class _AddDrugsState extends State<AddDrugs> {
                                         firstDate =
                                             DateFormat('yyyy-MM-dd')
                                                 .format(date);
-                                        // dateTime = DateFormat('yyMMdd')
-                                        //     .format(date);
                                       });
                                     },
+                                    maxDate: Duration(days: 0),
                                   ),
                                 ),
                               ));
@@ -173,6 +189,7 @@ class _AddDrugsState extends State<AddDrugs> {
                                         //     .format(date);
                                       });
                                     },
+                                    maxDate: Duration(days: 60),
                                   ),
                                 ),
                               ));
@@ -216,22 +233,103 @@ class _AddDrugsState extends State<AddDrugs> {
                         text: "إضافة",
                         press: () async{
                           setState(() {
-                            //_showSnnError = Validator.snn(_userSnn, dateTime);
+                            nameDrug.isEmpty ? _showInstructionError = true : _showInstructionError = false;
+                            inst.isEmpty ? _showInstructionError = true : _showInstructionError = false;
                           });
                           FocusScope.of(context).unfocus();
-
-                          Map<String, dynamic> input = {
-                            "id": 0,
-                            "name": "string",
-                            "instructions": "string",
-                            "startDate": "${firstDate}T14:29:05.761Z",
-                            "endDate": "${lastDate}T14:29:05.761Z",
-                            "medicalHistoryId": 0
-                          };
-
-
-                           await NetworkHelper.addNewMedicine(context,medicine: input);
-
+                          if(!_valid() && _isNotEmpty()){
+                            MedicineModel newMedicine = MedicineModel(
+                              medicineName:nameDrug,
+                              instructions: inst,
+                              startDate: firstDate,
+                              endDate: lastDate,
+                              medicalHistoryId: 0,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.white,
+                                elevation: 10,
+                                content: Text(
+                                  '...جاري التحميل',
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(color: Colors.black),
+                                ),
+                              ),
+                            );
+                            var result = await NetworkHelper.addNewMedicine(medicine: newMedicine.toJson());
+                            if(result == 200){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.white,
+                                  elevation: 10,
+                                  content: Text(
+                                    'تمت العملية بنجاح',
+                                    textAlign: TextAlign.right,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: Colors.black),
+                                  ),
+                                ),
+                              );
+                            }
+                            else if(result == 400){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.white,
+                                  elevation: 10,
+                                  content: Text(
+                                    'الرجاء التوجة الي اقرب مستشفي لتفعيل الحساب الخاص بك',
+                                    textAlign: TextAlign.right,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: Colors.black,fontSize: 16),
+                                  ),
+                                ),
+                              );
+                            }
+                            else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.white,
+                                  elevation: 10,
+                                  content: Text(
+                                    'حدث خطأ ما',
+                                    textAlign: TextAlign.right,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: Colors.black),
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                          else{
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.white,
+                                elevation: 10,
+                                content: Text(
+                                  'ادخل البيانات بشكل صحيح',
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(color: Colors.black),
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
                     ),
